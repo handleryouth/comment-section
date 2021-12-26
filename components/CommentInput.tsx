@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useRef } from "react";
 import { CommentInputProps } from "types";
 
 export const CommentInput = ({
@@ -6,6 +7,8 @@ export const CommentInput = ({
   handlePostData,
   buttonText,
 }: CommentInputProps) => {
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
   return (
     <div className="flex items-start mt-8 mx-4 flex-col sm:flex-row">
       <div className="flex w-full">
@@ -20,6 +23,7 @@ export const CommentInput = ({
         </div>
 
         <textarea
+          ref={textAreaRef}
           style={{ resize: "none" }}
           className="bg-lightgray h-36 rounded-md p-4 w-full focus:outline-none focus:border-2 focus:border-grayishblue  "
           onChange={(e) => {
@@ -30,7 +34,10 @@ export const CommentInput = ({
       </div>
       <button
         className="w-full bg-moderateblue text-white py-3 px-5 rounded tracking-widest mt-4 sm:ml-4 sm:w-auto sm:mt-0"
-        onClick={() => handlePostData()}
+        onClick={() => {
+          handlePostData();
+          textAreaRef.current!.value = "";
+        }}
       >
         {buttonText}
       </button>

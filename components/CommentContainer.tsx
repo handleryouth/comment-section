@@ -75,34 +75,60 @@ const CommentContainer = ({
   ]);
 
   const handleDeleteReply = useCallback(() => {
-    axios({
-      method: "delete",
-      url: "/api/reply/" + _id,
-      data: {
-        reply_id: reply_id,
-      },
-    })
-      .then(() => {
-        router.push("/");
-      })
-      .catch((err) => console.log(err.message));
-  }, [_id, reply_id, router]);
+    replyTo
+      ? axios({
+          method: "delete",
+          url: "/api/reply/" + _id,
+          data: {
+            reply_id: reply_id,
+          },
+        })
+          .then(() => {
+            router.push("/");
+          })
+          .catch((err) => console.log(err.message))
+      : axios({
+          method: "delete",
+          url: "/api/comment",
+          data: {
+            _id: _id,
+          },
+        })
+          .then(() => {
+            router.push("/");
+          })
+          .catch((err) => console.log(err.message));
+  }, [_id, replyTo, reply_id, router]);
 
   const handleEditReply = useCallback(() => {
-    axios({
-      method: "patch",
-      url: "/api/reply/" + _id,
-      data: {
-        reply_id: reply_id,
-        comment: editTemplate.comment,
-      },
-    })
-      .then(() => {
-        setEdit(false);
-        router.push("/");
-      })
-      .catch((err) => console.log(err.message));
-  }, [_id, editTemplate.comment, reply_id, router]);
+    replyTo
+      ? axios({
+          method: "patch",
+          url: "/api/reply/" + _id,
+          data: {
+            reply_id: reply_id,
+            comment: editTemplate.comment,
+          },
+        })
+          .then(() => {
+            setEdit(false);
+            router.push("/");
+          })
+          .catch((err) => console.log(err.message))
+      : axios({
+          method: "patch",
+          url: "/api/comment",
+          data: {
+            _id: _id,
+            comment: editTemplate.comment,
+          },
+        })
+          .then(() => {
+            setEdit(false);
+            router.push("/");
+          })
+          .catch((err) => console.log(err.message));
+  }, [_id, editTemplate.comment, replyTo, reply_id, router]);
 
   return (
     <div>

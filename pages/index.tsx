@@ -37,7 +37,7 @@ const Home: NextPage = ({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [inputTemplate, setInputTemplate] = useImmer<Comments>({
     profilePicture: "/images/avatars/image-juliusomo.png",
-    username: "Julius Omo",
+    username: "juliusomo",
     vote: 0,
     comment: "",
     reply: [],

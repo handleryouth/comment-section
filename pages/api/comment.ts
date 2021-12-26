@@ -31,6 +31,27 @@ export default async function handler(
         res.status(400).json({ success: false });
       }
       break;
+    case "DELETE":
+      try {
+        const comment = await Comment.deleteOne({
+          _id: new mongoose.Types.ObjectId(req.body._id),
+        });
+        res.status(200).json({ success: true, data: comment });
+      } catch (error) {
+        res.status(400).json({ success: false });
+      }
+      break;
+    case "PATCH":
+      try {
+        const comment = await Comment.updateOne(
+          { _id: new mongoose.Types.ObjectId(req.body._id) },
+          { $set: { comment: req.body.comment } }
+        );
+        res.status(201).json({ success: true, data: comment });
+      } catch (error) {
+        res.status(400).json({ success: false });
+      }
+      break;
     default:
       res.status(400).json({ success: false });
       break;
