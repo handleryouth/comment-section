@@ -1,7 +1,4 @@
-interface ConfirmationModalProps {
-  title: string;
-  message: string;
-}
+import { ConfirmationModalProps } from "types";
 
 const ConfirmationModal = ({ title, message }: ConfirmationModalProps) => {
   return (

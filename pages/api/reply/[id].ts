@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
-import dbConnect from "../../../lib/dbConnect";
-import Comment from "../../../models/Comment";
+import dbConnect from "lib/dbConnect";
+import Comment from "models/Comment";
 
 export default async function handler(
   req: NextApiRequest,

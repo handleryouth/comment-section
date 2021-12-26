@@ -1,10 +1,6 @@
 import Head from "next/head";
 import Image from "next/image";
-
-interface CommentInputProps {
-  toggleFunction: (value: string) => void;
-  handlePostData: Function;
-}
+import { CommentInputProps } from "types";
 
 export const CommentInput = ({
   toggleFunction,
