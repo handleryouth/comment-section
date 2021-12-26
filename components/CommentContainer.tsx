@@ -68,8 +68,8 @@ const CommentContainer = ({
 
   return (
     <div>
-      <div className="flex p-4 w-full">
-        <div className="bg-lightgrayishblue/25 mr-3 rounded overflow-hidden">
+      <div className="flex p-4 w-full items-center">
+        <div className="bg-lightgrayishblue/25 mr-3 rounded overflow-hidden flex flex-col justify-center items-center">
           <button
             className={`w-10 h-2/6 ${
               voteValidation === "plus" && "bg-red-500"
@@ -107,10 +107,10 @@ const CommentContainer = ({
 
         <div className="w-full">
           <div
-            className="flex justify-between"
+            className="flex justify-between flex-col sm:flex-row"
             onClick={() => setReply((prevState) => !prevState)}
           >
-            <div className="flex items-center">
+            <div className="flex  flex-row items-center">
               <Image
                 src={profilePicture}
                 layout="fixed"
@@ -118,14 +118,17 @@ const CommentContainer = ({
                 height={40}
                 alt="Profile Picture"
               />
-              <p className="mx-4 text-darkblue font-bold">{username}</p>
-              <p className="text-grayishblue">
-                {formatDistanceToNow(new Date(date), { addSuffix: true })}
-              </p>
+
+              <div className="ml-3">
+                <p className=" text-darkblue font-bold">{username}</p>
+                <p className="text-grayishblue">
+                  {formatDistanceToNow(new Date(date), { addSuffix: true })}
+                </p>
+              </div>
             </div>
 
             <div
-              className="flex items-center"
+              className="flex items-center cursor-pointer my-1 sm:my-0"
               onClick={() => {
                 setReplyTemplate!((draft) => void (draft.replyTo = username));
               }}
@@ -141,9 +144,9 @@ const CommentContainer = ({
             </div>
           </div>
 
-          <p className="text-grayishblue">
+          <p className="text-grayishblue text-justify">
             {replyTo && (
-              <span className="text-moderateblue font-bold mr-2">{`@${replyTo}`}</span>
+              <span className="text-moderateblue  font-bold mr-2">{`@${replyTo}`}</span>
             )}
             {comment}
           </p>

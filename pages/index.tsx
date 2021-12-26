@@ -112,7 +112,7 @@ const Home: NextPage = ({
   );
 
   return (
-    <div>
+    <div className="p-4">
       <div>
         {(data as Comments[]).map((comment, index) => {
           return (
@@ -123,7 +123,7 @@ const Home: NextPage = ({
               />
 
               {comment.reply!.length > 0 && (
-                <div className="ml-8 border-l-2">
+                <div className="ml-3 sm:ml-8 border-l-2">
                   {comment.reply!.map((reply, index) => {
                     return (
                       <CommentContainer
