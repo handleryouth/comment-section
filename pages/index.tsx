@@ -15,8 +15,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     headers: {
       "Content-Type": "application/json",
       "Access-Control-Request-Headers": "*",
-      "api-key":
-        "nlRCkgQPOwz3e5PGlSpIsEoG8wnJCVJoVIinMpiH1m6xGNiuZr1yPrwAGdc6OH9b",
+      "api-key": process.env.API_KEY!,
     },
     data: {
       collection: "comments",
