@@ -17,12 +17,8 @@ export interface CommentContainerProps extends Comments {
   reply_id?: string;
 }
 
-export interface ConfirmationModalProps {
-  title: string;
-  message: string;
-}
-
 export interface CommentInputProps {
   toggleFunction: (value: string) => void;
   handlePostData: Function;
+  buttonText: string;
 }

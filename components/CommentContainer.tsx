@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
-import Image from "next/image";
+import { useCallback, useState } from "react";
 import axios from "axios";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { useImmer } from "use-immer";
-import { useRouter } from "next/router";
 import { CommentContainerProps, IndividualComment } from "types";
+import Image from "next/image";
+import { useRouter } from "next/router";
 import CommentInput from "./CommentInput";
 
 const CommentContainer = ({
@@ -19,6 +19,7 @@ const CommentContainer = ({
   date,
 }: CommentContainerProps) => {
   const [reply, setReply] = useState(false);
+  const [edit, setEdit] = useState(false);
 
   const [voteValidation, setVoteValidation] = useState<
     "plus" | "minus" | undefined
@@ -26,15 +27,22 @@ const CommentContainer = ({
 
   const router = useRouter();
 
-  useEffect(() => {}, []);
-
   const [replyTemplate, setReplyTemplate] = useImmer<IndividualComment>({
     profilePicture: "/images/avatars/image-juliusomo.png",
-    username: "Julius Omo",
+    username: "juliusomo",
     comment: "",
     vote: 0,
     replyTo: "",
     date: new Date().toString(),
+  });
+
+  const [editTemplate, setEditTemplate] = useImmer<IndividualComment>({
+    profilePicture: "/images/avatars/image-juliusomo.png",
+    username: "juliusomo",
+    comment: "",
+    vote: vote,
+    replyTo: replyTo,
+    date: date,
   });
 
   const handleReplyComment = useCallback(() => {
@@ -65,6 +73,36 @@ const CommentContainer = ({
     replyTemplate.vote,
     router,
   ]);
+
+  const handleDeleteReply = useCallback(() => {
+    axios({
+      method: "delete",
+      url: "/api/reply/" + _id,
+      data: {
+        reply_id: reply_id,
+      },
+    })
+      .then(() => {
+        router.push("/");
+      })
+      .catch((err) => console.log(err.message));
+  }, [_id, reply_id, router]);
+
+  const handleEditReply = useCallback(() => {
+    axios({
+      method: "patch",
+      url: "/api/reply/" + _id,
+      data: {
+        reply_id: reply_id,
+        comment: editTemplate.comment,
+      },
+    })
+      .then(() => {
+        setEdit(false);
+        router.push("/");
+      })
+      .catch((err) => console.log(err.message));
+  }, [_id, editTemplate.comment, reply_id, router]);
 
   return (
     <div>
@@ -106,10 +144,7 @@ const CommentContainer = ({
         </div>
 
         <div className="w-full">
-          <div
-            className="flex justify-between flex-col sm:flex-row"
-            onClick={() => setReply((prevState) => !prevState)}
-          >
+          <div className="flex justify-between flex-col sm:flex-row">
             <div className="flex  flex-row items-center">
               <Image
                 src={profilePicture}
@@ -120,28 +155,69 @@ const CommentContainer = ({
               />
 
               <div className="ml-3">
-                <p className=" text-darkblue font-bold">{username}</p>
+                <div className="flex">
+                  <p className=" text-darkblue font-bold">{username}</p>
+                  {username === "juliusomo" && (
+                    <p className="bg-moderateblue text-white px-1 ml-2 rounded">
+                      You
+                    </p>
+                  )}
+                </div>
+
                 <p className="text-grayishblue">
                   {formatDistanceToNow(new Date(date), { addSuffix: true })}
                 </p>
               </div>
             </div>
 
-            <div
-              className="flex items-center cursor-pointer my-1 sm:my-0"
-              onClick={() => {
-                setReplyTemplate!((draft) => void (draft.replyTo = username));
-              }}
-            >
-              <Image
-                src="/images/icon-reply.svg"
-                layout="fixed"
-                width={20}
-                height={20}
-                alt="Reply Icon"
-              />
-              <p className="text-moderateblue ml-2 ">Reply</p>
-            </div>
+            {username !== "juliusomo" ? (
+              <div
+                className="flex items-center cursor-pointer my-1 sm:my-0"
+                onClick={() => {
+                  setReply((prevState) => !prevState);
+                  setReplyTemplate!((draft) => void (draft.replyTo = username));
+                }}
+              >
+                <Image
+                  src="/images/icon-reply.svg"
+                  layout="fixed"
+                  width={20}
+                  height={20}
+                  alt="Reply Icon"
+                />
+                <p className="text-moderateblue ml-2 ">Reply</p>
+              </div>
+            ) : (
+              <div className="flex items-center cursor-pointer my-1 sm:my-0">
+                <div
+                  className="flex items-center"
+                  onClick={() => handleDeleteReply()}
+                >
+                  <Image
+                    src="/images/icon-delete.svg"
+                    layout="fixed"
+                    width={20}
+                    height={20}
+                    alt="Reply Icon"
+                  />
+                  <p className="text-red-600 ml-2 ">Delete</p>
+                </div>
+
+                <div
+                  className="flex items-center ml-4"
+                  onClick={() => setEdit((prevState) => !prevState)}
+                >
+                  <Image
+                    src="/images/icon-reply.svg"
+                    layout="fixed"
+                    width={20}
+                    height={20}
+                    alt="Reply Icon"
+                  />
+                  <p className="text-moderateblue ml-2 ">Edit</p>
+                </div>
+              </div>
+            )}
           </div>
 
           <p className="text-grayishblue text-justify">
@@ -159,6 +235,17 @@ const CommentContainer = ({
             setReplyTemplate!((draft) => void (draft.comment = value))
           }
           handlePostData={handleReplyComment}
+          buttonText="REPLY"
+        />
+      )}
+
+      {edit && (
+        <CommentInput
+          toggleFunction={(value) =>
+            setEditTemplate!((draft) => void (draft.comment = value))
+          }
+          handlePostData={handleEditReply}
+          buttonText="EDIT"
         />
       )}
     </div>

@@ -30,6 +30,42 @@ export default async function handler(
         res.status(400).json({ success: false });
       }
       break;
+    case "DELETE":
+      try {
+        const comments = await Comment.updateOne(
+          {
+            _id: new mongoose.Types.ObjectId(query.id as string),
+          },
+          {
+            $pull: {
+              reply: { _id: new mongoose.Types.ObjectId(req.body.reply_id) },
+            },
+          }
+        );
+        res.status(200).json({ success: true, data: comments });
+      } catch (error) {
+        res.status(400).json({ success: false });
+      }
+      break;
+    case "PATCH":
+      try {
+        const comments = await Comment.updateOne(
+          {
+            _id: new mongoose.Types.ObjectId(query.id as string),
+            "reply._id": new mongoose.Types.ObjectId(req.body.reply_id),
+          },
+
+          {
+            $set: {
+              "reply.$.comment": req.body.comment,
+            },
+          }
+        );
+        res.status(200).json({ success: true, data: comments });
+      } catch (error) {
+        res.status(400).json({ success: false });
+      }
+      break;
     default:
       res.status(400).json({ success: false });
       break;

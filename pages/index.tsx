@@ -7,6 +7,7 @@ import type { NextPage } from "next";
 import { Comments } from "types";
 import { useRouter } from "next/router";
 import { CommentContainer, CommentInput } from "components";
+import Head from "next/head";
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const responseData = await axios({
@@ -112,6 +113,14 @@ const Home: NextPage = ({
 
   return (
     <div className="p-4">
+      <Head>
+        <title>Comment Section using mongoose</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="description" content="Comment Section using mongoose" />
+        <meta name="keywords" content="NextJS, Tailwind CSS, React, mongoose" />
+        <meta httpEquiv="content-language" content="en-us" />
+        <meta name="author" content="handleryouth" />
+      </Head>
       <div>
         {(data as Comments[]).map((comment, index) => {
           return (
@@ -146,6 +155,7 @@ const Home: NextPage = ({
           setInputTemplate((draft) => void (draft.comment = value))
         }
         handlePostData={handlePostData}
+        buttonText="REPLY"
       />
     </div>
   );
