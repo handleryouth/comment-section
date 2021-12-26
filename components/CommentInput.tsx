@@ -11,8 +11,8 @@ export const CommentInput = ({
 }: CommentInputProps) => {
   return (
     <div className="flex items-start mt-8 mx-4 flex-col sm:flex-row">
-      <div className="flex">
-        <div className="mr-3">
+      <div className="flex w-full">
+        <div className="mr-3 ">
           <Image
             src="/images/avatars/image-juliusomo.png"
             layout="fixed"
