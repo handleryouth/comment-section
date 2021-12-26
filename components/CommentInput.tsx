@@ -1,3 +1,4 @@
+import Head from "next/head";
 import Image from "next/image";
 
 interface CommentInputProps {
@@ -11,6 +12,15 @@ export const CommentInput = ({
 }: CommentInputProps) => {
   return (
     <div className="flex items-start mt-8 mx-4 flex-col sm:flex-row">
+      <Head>
+        <title>Comment Section using mongoose</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="description" content="Comment Section using mongoose" />
+        <meta name="keywords" content="NextJS, Tailwind CSS, React, mongoose" />
+        <meta httpEquiv="content-language" content="en-us" />
+        <meta name="author" content="handleryouth" />
+      </Head>
+
       <div className="flex w-full">
         <div className="mr-3 ">
           <Image
