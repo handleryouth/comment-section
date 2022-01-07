@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { useImmer } from "use-immer";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import mongoose from "mongoose";
@@ -35,7 +35,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
 const Home: NextPage = ({
   data,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const [allData, setAllData] = useImmer<Comments[]>(data);
+  const [allData, setAllData] = useImmer<Comments[]>(data && data);
+  const router = useRouter();
 
   const [inputTemplate, setInputTemplate] = useImmer<
     Omit<Comments, "commentIndex" | "replyindex">
@@ -47,8 +48,6 @@ const Home: NextPage = ({
     reply: [],
     date: new Date().toString(),
   });
-
-  const router = useRouter();
 
   const handlePostData = useCallback(() => {
     axios({
@@ -65,7 +64,7 @@ const Home: NextPage = ({
     })
       .then(() => {
         setInputTemplate((draft) => void (draft.comment = ""));
-        router.push("/");
+        router.reload();
       })
       .catch((err) => console.log(err.message));
   }, [

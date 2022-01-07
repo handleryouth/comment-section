@@ -10,13 +10,13 @@ export interface IndividualComment {
 
 export interface Comments extends IndividualComment {
   reply?: IndividualComment[];
-  commentIndex: number;
-  replyindex?: number;
 }
 
 export interface CommentContainerProps extends Comments {
   handleUpdateVotes: Function;
   reply_id?: string;
+  commentIndex: number;
+  replyindex?: number;
 }
 
 export interface CommentInputProps {

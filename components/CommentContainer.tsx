@@ -61,7 +61,7 @@ const CommentContainer = ({
       },
     })
       .then(() => {
-        router.push("/");
+        router.reload();
         setReply(false);
       })
       .catch((err) => console.log(err.message));
@@ -86,7 +86,7 @@ const CommentContainer = ({
           },
         })
           .then(() => {
-            router.push("/");
+            router.reload();
           })
           .catch((err) => console.log(err.message))
       : axios({
@@ -97,7 +97,7 @@ const CommentContainer = ({
           },
         })
           .then(() => {
-            router.push("/");
+            router.reload();
           })
           .catch((err) => console.log(err.message));
   }, [_id, replyTo, reply_id, router]);
@@ -114,7 +114,7 @@ const CommentContainer = ({
         })
           .then(() => {
             setEdit(false);
-            router.push("/");
+            router.reload();
           })
           .catch((err) => console.log(err.message))
       : axios({
@@ -127,7 +127,7 @@ const CommentContainer = ({
         })
           .then(() => {
             setEdit(false);
-            router.push("/");
+            router.reload();
           })
           .catch((err) => console.log(err.message));
   }, [_id, editTemplate.comment, replyTo, reply_id, router]);
