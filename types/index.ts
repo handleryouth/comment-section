@@ -10,6 +10,8 @@ export interface IndividualComment {
 
 export interface Comments extends IndividualComment {
   reply?: IndividualComment[];
+  commentIndex: number;
+  replyindex?: number;
 }
 
 export interface CommentContainerProps extends Comments {

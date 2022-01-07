@@ -17,6 +17,8 @@ const CommentContainer = ({
   handleUpdateVotes,
   reply_id,
   date,
+  commentIndex,
+  replyindex,
 }: CommentContainerProps) => {
   const [reply, setReply] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -135,15 +137,27 @@ const CommentContainer = ({
       <div className="flex p-4 w-full items-center">
         <div className="bg-lightgrayishblue/25 mr-3 rounded overflow-hidden flex flex-col justify-center items-center">
           <button
-            className={`w-10 h-2/6 ${
-              voteValidation === "plus" && "bg-red-500"
-            } `}
+            className={`w-10 h-2/6 `}
             onClick={() => {
               if (voteValidation === "plus") {
-                handleUpdateVotes(vote - 1, _id, replyTo && reply_id);
+                handleUpdateVotes(
+                  "minus",
+                  vote,
+                  commentIndex,
+                  _id,
+                  replyTo && reply_id,
+                  replyindex && replyindex
+                );
                 setVoteValidation(undefined);
               } else {
-                handleUpdateVotes(vote + 1, _id, replyTo && reply_id);
+                handleUpdateVotes(
+                  "plus",
+                  vote,
+                  commentIndex,
+                  _id,
+                  replyTo && reply_id,
+                  replyindex && replyindex
+                );
                 setVoteValidation("plus");
               }
             }}
@@ -152,15 +166,27 @@ const CommentContainer = ({
           </button>
           <p className="text-center h-2/6">{vote}</p>
           <button
-            className={`w-10 h-2/6 ${
-              voteValidation === "minus" && "bg-red-500"
-            } `}
+            className={`w-10 h-2/6  `}
             onClick={() => {
               if (voteValidation === "minus") {
-                handleUpdateVotes(vote + 1, _id, replyTo && reply_id);
+                handleUpdateVotes(
+                  "plus",
+                  vote,
+                  commentIndex,
+                  _id,
+                  replyTo && reply_id,
+                  replyindex && replyindex
+                );
                 setVoteValidation(undefined);
               } else {
-                handleUpdateVotes(vote - 1, _id, replyTo && reply_id);
+                handleUpdateVotes(
+                  "minus",
+                  vote,
+                  commentIndex,
+                  _id,
+                  replyTo && reply_id,
+                  replyindex && replyindex
+                );
                 setVoteValidation("minus");
               }
             }}

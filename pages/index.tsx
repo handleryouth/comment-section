@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useImmer } from "use-immer";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import mongoose from "mongoose";
@@ -35,7 +35,11 @@ export const getServerSideProps: GetServerSideProps = async () => {
 const Home: NextPage = ({
   data,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const [inputTemplate, setInputTemplate] = useImmer<Comments>({
+  const [allData, setAllData] = useImmer<Comments[]>(data);
+
+  const [inputTemplate, setInputTemplate] = useImmer<
+    Omit<Comments, "commentIndex" | "replyindex">
+  >({
     profilePicture: "/images/avatars/image-juliusomo.png",
     username: "juliusomo",
     vote: 0,
@@ -76,39 +80,54 @@ const Home: NextPage = ({
   ]);
 
   const handleUpdateVotes = useCallback(
-    (value: number, _id: string) => {
+    (type: string, value: number, commentIndex: number, _id: string) => {
+      let trueValue = type === "plus" ? value + 1 : value - 1;
+      setAllData((draft) => {
+        void (draft[commentIndex].vote! = trueValue);
+      });
       axios({
         method: "post",
-        url: "/api/vote",
+        url: "/api/vote/",
         data: {
-          vote: value,
+          vote: trueValue,
           _id: new mongoose.Types.ObjectId(_id),
         },
-      })
-        .then(() => {
-          router.push("/");
-        })
-        .catch((err) => console.log(err.message));
+      }).catch((err) => {
+        console.log(err.message);
+        setAllData((draft) => void (draft[commentIndex].vote = value));
+      });
     },
-    [router]
+    [setAllData]
   );
 
   const handleUpdateVotesReply = useCallback(
-    (value: number, _id: string, reply_id: string) => {
+    (
+      type: string,
+      value: number,
+      commentindex: number,
+      _id: string,
+      reply_id: string,
+      replyindex: number
+    ) => {
+      let trueValue = type === "plus" ? value + 1 : value - 1;
+      setAllData((draft) => {
+        void (draft[commentindex].reply![replyindex].vote = trueValue);
+      });
       axios({
         method: "post",
         url: "/api/replyvote/" + _id,
         data: {
-          vote: value,
+          vote: trueValue,
           reply_id: reply_id,
         },
-      })
-        .then(() => {
-          router.push("/");
-        })
-        .catch((err) => console.log(err.message));
+      }).catch((err) => {
+        setAllData((draft) => {
+          void (draft[commentindex].reply![replyindex].vote = value);
+        });
+        console.log(err.message);
+      });
     },
-    [router]
+    [setAllData]
   );
 
   return (
@@ -122,24 +141,27 @@ const Home: NextPage = ({
         <meta name="author" content="handleryouth" />
       </Head>
       <div>
-        {(data as Comments[]).map((comment, index) => {
+        {allData.map((comment, commentIndex) => {
           return (
-            <div key={index}>
+            <div key={commentIndex}>
               <CommentContainer
                 {...comment}
                 handleUpdateVotes={handleUpdateVotes}
+                commentIndex={commentIndex}
               />
 
               {comment.reply!.length > 0 && (
                 <div className="ml-3 sm:ml-8 border-l-2">
-                  {comment.reply!.map((reply, index) => {
+                  {comment.reply!.map((reply, replyIndex) => {
                     return (
                       <CommentContainer
                         handleUpdateVotes={handleUpdateVotesReply}
-                        key={index}
+                        key={replyIndex}
                         {...reply}
                         _id={comment._id}
                         reply_id={reply._id}
+                        commentIndex={commentIndex}
+                        replyindex={replyIndex}
                       />
                     );
                   })}
