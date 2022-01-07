@@ -1,6 +1,6 @@
 import { Comments } from "types";
 
-export const mockComment: Comments[] = [
+export const mockComment: Omit<Comments, "commentIndex">[] = [
   {
     profilePicture: "/images/avatars/image-amyrobson.png",
     username: "amyrobson",
